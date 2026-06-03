@@ -1,4 +1,5 @@
 import pygame as pg
+import random as rand
 
 pg.init()
 w,h = 800,800
@@ -35,6 +36,9 @@ def update_boid(boid):
 
 b1 = boid(400, 400, 1, 1)
 boids = [b1]
+for i in range(50):
+    boids.append(boid(rand.random()*w, rand.random()*h, rand.random()*2-1, rand.random()*2-1))
+
 while running:
     for event in pg.event.get():
         if event.type == pg.QUIT:
