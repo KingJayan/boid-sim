@@ -1,8 +1,13 @@
 import pygame as pg
 import random as rand
+from math import dist
 
 pg.init()
 w,h = 800,800
+
+min_prox = 50
+avoid_factor = 0.05
+max_vel = 2
 
 screen = pg.display.set_mode((w,h))
 pg.display.set_caption("boid simulation")
@@ -34,6 +39,26 @@ def draw_boid(boid):
 def update_boid(boid):
     boid.update()
 
+def find_neighbors(boid, boids, rad):
+    neighbors = []
+    for other in boids:
+        if other != boid and dist(boid.get_pose(), other.get_pose()) < rad:
+            neighbors.append(other)
+    return neighbors
+
+def clamp(v, min, max):
+    if v<min:
+        return min
+    elif v>max:
+        return max
+    else:
+        return v
+def cap(v, max):
+    if abs(v) > max:
+        return max * (v/abs(v))
+    else:
+        return v
+
 b1 = boid(400, 400, 1, 1)
 boids = [b1]
 for i in range(50):
@@ -48,8 +73,22 @@ while running:
 
     for boid in boids:
         draw_boid(boid)
-        update_boid(boid)
+    
+    for boid in boids:
+        neighbors = find_neighbors(boid, boids, min_prox)
+        if len(neighbors) > 0:
+            acc_x, acc_y = 0,0
+            for neighbor in neighbors:
+                acc_x += boid.get_pose()[0] - neighbor.get_pose()[0]
+                acc_y += boid.get_pose()[1] - neighbor.get_pose()[1]
 
+            boid.vx += acc_x * avoid_factor
+            boid.vy += acc_y * avoid_factor
+        
+        boid.vx = cap(boid.vx, max_vel)
+        boid.vy = cap(boid.vy, max_vel)
+        update_boid(boid)
+    
     for boid in boids:
         if boid.get_pose()[0] > w or boid.get_pose()[0] < 0:
             boid.x = boid.get_pose()[0] % w
