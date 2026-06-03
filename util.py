@@ -1,3 +1,5 @@
+from math import dist
+
 def clamp(v, min, max):
     if v<min:
         return min
