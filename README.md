@@ -13,8 +13,9 @@
 ## notes
 - rn its pretty ahh in terms of time complexity
     - O(n^2) neighbor checks per frame, **will optimize later**
+- learners project
 
-
+## structure
 `config.py` - main configuration files
 
 `util.py` - math utility
@@ -24,7 +25,7 @@
 ## quickstart
 
 ### prereqs
-`python` -- 3.10+
+`python` - 3.10+
 
 ### clone the repo
 ```bash
@@ -40,5 +41,7 @@ uv pip install -r requirements.txt
 
 ### run it
 ```bash
+pip install pygame # if no venv
+
 python main.py
 ```
