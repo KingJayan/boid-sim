@@ -1,23 +1,30 @@
 <div align="center">
 <h2><code>KingJayan/boid-sim</code></h2>
+<p>simple boid simulation made using pygame</p>
 </div>
 
-simple boid simulation made using pygame
-
+## todo
 - [X] initialization
 - [X] separation
 - [ ] alignment
 - [ ] cohesion
 - [ ] other doohickeys(obstacles, evolution, specie behaviors)
 
-rn its pretty ahh in terms of time complexity
+## notes
+- rn its pretty ahh in terms of time complexity
+    - O(n^2) neighbor checks per frame, **will optimize later**
 
 
-`config.ts` - main configuration files
-`util.py` - some math utility
+`config.py` - main configuration files
+
+`util.py` - math utility
+
 `main.py` - game loop, functions, everything
 
 ## quickstart
+
+### prereqs
+`python` -- 3.10+
 
 ### clone the repo
 ```bash
