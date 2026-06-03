@@ -1,13 +1,10 @@
 import pygame as pg
 import random as rand
 from math import dist
+from util import cap_mag
+from config import *
 
 pg.init()
-w,h = 800,800
-
-min_prox = 50
-avoid_factor = 0.05
-max_vel = 2
 
 screen = pg.display.set_mode((w,h))
 pg.display.set_caption("boid simulation")
@@ -15,7 +12,7 @@ clock = pg.time.Clock()
 
 running = True
 
-class boid:
+class Boid:
     def __init__(self, x, y, vx, vy):
         self.x = x
         self.y = y
@@ -46,23 +43,11 @@ def find_neighbors(boid, boids, rad):
             neighbors.append(other)
     return neighbors
 
-def clamp(v, min, max):
-    if v<min:
-        return min
-    elif v>max:
-        return max
-    else:
-        return v
-def cap(v, max):
-    if abs(v) > max:
-        return max * (v/abs(v))
-    else:
-        return v
 
-b1 = boid(400, 400, 1, 1)
+b1 = Boid(400, 400, 1, 1)
 boids = [b1]
 for i in range(50):
-    boids.append(boid(rand.random()*w, rand.random()*h, rand.random()*2-1, rand.random()*2-1))
+    boids.append(Boid(rand.random()*w, rand.random()*h, rand.random()*2-1, rand.random()*2-1))
 
 while running:
     for event in pg.event.get():
@@ -79,21 +64,20 @@ while running:
         if len(neighbors) > 0:
             acc_x, acc_y = 0,0
             for neighbor in neighbors:
-                acc_x += boid.get_pose()[0] - neighbor.get_pose()[0]
-                acc_y += boid.get_pose()[1] - neighbor.get_pose()[1]
+                acc_x += boid.x - neighbor.x
+                acc_y += boid.y - neighbor.y
 
             boid.vx += acc_x * avoid_factor
             boid.vy += acc_y * avoid_factor
         
-        boid.vx = cap(boid.vx, max_vel)
-        boid.vy = cap(boid.vy, max_vel)
+        boid.vx, boid.vy = cap_mag(boid.vx, boid.vy, max_vel)
         update_boid(boid)
     
     for boid in boids:
-        if boid.get_pose()[0] > w or boid.get_pose()[0] < 0:
-            boid.x = boid.get_pose()[0] % w
-        if boid.get_pose()[1] > h or boid.get_pose()[1] < 0:
-            boid.y = boid.get_pose()[1] % h
+        if boid.x > w or boid.x < 0:
+            boid.x = boid.x % w
+        if boid.y > h or boid.y < 0:
+            boid.y = boid.y % h
 
     pg.display.flip()
     clock.tick(60)
