@@ -13,6 +13,8 @@ font = pg.font.SysFont("Arial", 18)
 
 running = True
 
+dt = clock.tick(60) / 1000
+
 class Boid:
     def __init__(self, x, y, vx, vy):
         self.x = x
@@ -21,8 +23,8 @@ class Boid:
         self.vy = vy
 
     def update(self):
-        self.x += self.vx
-        self.y += self.vy
+        self.x += self.vx * dt
+        self.y += self.vy * dt
 
     def get_pose(self):
         return (self.x, self.y)
@@ -55,9 +57,6 @@ while running:
             running = False
     
     screen.fill((20,20,20))
-
-    for boid in boids:
-        draw_boid(boid)
     
     for boid in boids:
         neighbors = find_neighbors(boid, boids, min_prox)
@@ -73,12 +72,13 @@ while running:
         boid.vx, boid.vy = cap_mag(boid.vx, boid.vy, max_vel)
         update_boid(boid)
     
-    for boid in boids:
         if boid.x > w or boid.x < 0:
             boid.x = boid.x % w
         if boid.y > h or boid.y < 0:
             boid.y = boid.y % h
-
+        
+        draw_boid(boid)
+    
     screen.blit(font.render(f"boids: {len(boids)}", True, (255,255,255)), (10,10))
     screen.blit(font.render(f"fps: {int(clock.get_fps())}", True, (255,255,255)), (10,30))
 
