@@ -9,6 +9,7 @@ pg.init()
 screen = pg.display.set_mode((w,h))
 pg.display.set_caption("boid simulation")
 clock = pg.time.Clock()
+font = pg.font.SysFont("Arial", 18)
 
 running = True
 
@@ -44,8 +45,7 @@ def find_neighbors(boid, boids, rad):
     return neighbors
 
 
-b1 = Boid(400, 400, 1, 1)
-boids = [b1]
+boids = []
 for i in range(50):
     boids.append(Boid(rand.random()*w, rand.random()*h, rand.random()*2-1, rand.random()*2-1))
 
@@ -78,6 +78,9 @@ while running:
             boid.x = boid.x % w
         if boid.y > h or boid.y < 0:
             boid.y = boid.y % h
+
+    screen.blit(font.render(f"boids: {len(boids)}", True, (255,255,255)), (10,10))
+    screen.blit(font.render(f"fps: {int(clock.get_fps())}", True, (255,255,255)), (10,30))
 
     pg.display.flip()
     clock.tick(60)
